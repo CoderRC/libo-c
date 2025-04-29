@@ -1,0 +1,21 @@
+srcdir=@srcdir@
+VPATH=$(srcdir):bin
+
+prefix=@prefix@
+
+INCLUDE_DIRECTORIES =@INCLUDE_DIRECTORIES@
+INCLUDE_FILES =@INCLUDE_FILES@
+
+all: compile_include
+
+compile_include: $(addprefix $(CURDIR)/, $(INCLUDE_DIRECTORIES)) $(addprefix $(CURDIR)/, $(INCLUDE_FILES))
+
+$(addprefix $(CURDIR)/, $(INCLUDE_DIRECTORIES)):
+	mkdir -p $@
+
+$(addprefix $(CURDIR)/, $(INCLUDE_FILES)): $(CURDIR)/%: %
+	cp -R $< $(@:$(CURDIR)/%=%)
+
+install:
+	test -z "$(prefix)/include" || mkdir -p "$(prefix)/include"
+	cp -R include/* $(prefix)/include
